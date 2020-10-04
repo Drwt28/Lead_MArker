@@ -152,14 +152,18 @@ class _ViewPriceProposalState extends State<ViewPriceProposal> {
                             SizedBox(
                               height: 20,
                             ),
-                            DataTable(columns: [
-                              buildColumnHead("#", context),
-                              buildColumnHead("Description", context),
-                              buildColumnHead("Quantity", context),
-                              buildColumnHead("Amount", context),
-                            ], rows: [
-                              buildRow(context)
-                            ]),
+                            FittedBox(
+                              child: DataTable(
+                                  
+                                  columns: [
+                                buildColumnHead("#", context),
+                                buildColumnHead("Description", context),
+                                buildColumnHead("Quantity", context),
+                                buildColumnHead("Amount", context),
+                              ], rows: [
+                                buildRow(context)
+                              ]),
+                            ),
                             Align(
                               alignment: Alignment.centerRight,
                               child: Row(
@@ -322,9 +326,16 @@ class _ViewPriceProposalState extends State<ViewPriceProposal> {
   }
 
   DataRow buildRow(context) {
-    return DataRow(cells: [
-      DataCell(Text(
+    return DataRow(
+        
+        cells: [
+      DataCell(
+          Text(
         '1',
+        softWrap: true,
+        textAlign: TextAlign.justify,
+        maxLines: 10,
+        overflow: TextOverflow.clip,
         style: Theme.of(context)
             .textTheme
             .headline6

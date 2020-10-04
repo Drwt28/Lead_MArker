@@ -15,7 +15,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="flutter_olx"
+        android:label="Lead Marker"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

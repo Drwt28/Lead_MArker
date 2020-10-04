@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_olx/CustomWidgets/CustomerLeadModel.dart';
 import 'package:flutter_olx/Model/Notes.dart';
 import 'package:flutter_olx/Screens/HomeScreen/Lead/EditCustomerPage.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_olx/Api/ApiClient.dart';
@@ -34,14 +35,28 @@ class LeadPage extends StatefulWidget {
 }
 
 class _LeadPageState extends State<LeadPage> with TickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<Offset> _offsetAnimation;
+  AnimationController animationController;
+  Animation<double> animation;
 
   @override
   void initState() {
     super.initState();
     leadList = [];
     getdata();
+
+    animationController =
+        AnimationController(duration: Duration(milliseconds: 1200), vsync: this)
+          ..addListener(() {
+            setState(() {});
+          });
+
+
+
+    animation = Tween<double>(begin: -500, end: 0.0).
+    animate(
+        CurvedAnimation(curve: Curves.bounceOut, parent: animationController));
+
+    animationController.forward();
   }
 
   String _id, _tokken;
@@ -88,7 +103,6 @@ class _LeadPageState extends State<LeadPage> with TickerProviderStateMixin {
 
     var allLabels = labels.toSet();
 
-
     var unAddedLabels = labels.toSet().difference(addedLabels).toList();
 
     showDialog(
@@ -102,7 +116,7 @@ class _LeadPageState extends State<LeadPage> with TickerProviderStateMixin {
             actions: [
               FlatButton(
                 child: Text('Add Labels'),
-                onPressed: ()async {
+                onPressed: () async {
                   var list = unAddedLabels
                       .where((element) => element.isSelected)
                       .toList();
@@ -226,40 +240,53 @@ class _LeadPageState extends State<LeadPage> with TickerProviderStateMixin {
                       style: TextStyle(color: Colors.black38),
                       textAlign: TextAlign.center,
                     ),
-                    ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: widget.leads.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (cxt, index) {
-                          List<AddedLabel> labels = widget.labelList
-                              .where((element) =>
-                                  element.cusLeadId == widget.leads[index].id)
-                              .toList();
+                    AnimationLimiter(
+                      child: ListView.builder(
+                          reverse: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: widget.leads.length,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (cxt, index) {
+                            List<AddedLabel> labels = widget.labelList
+                                .where((element) =>
+                                    element.cusLeadId == widget.leads[index].id)
+                                .toList();
 
-                          return buildSingleTile(
-                              context, widget.leads[index].expanded,
-                              labels: labels,
-                              note: notesMap[leadList[index].id.toString()] ??
-                                  [Notes(note: "No Notes Yet")],
-                              onLongPress: () {
-                                buildOptionDialog(widget.leads[index]);
-                              },
-                              customer: widget.leads[index],
-                              lead: widget.leads[index],
-                              isCustomer: false,
-                              expPressed: () {
-                                widget.leads[index].expanded =
-                                    !widget.leads[index].expanded;
-                                setState(() {});
-                              },
-                              deletePressed: () async {
-                                Provider.of<UserDataProvider>(context,
-                                        listen: false)
-                                    .deleteCustomerLead(widget.leads[index]);
-                                widget.leads.remove(widget.leads[index]);
-                              });
-                        })
+                            return AnimationConfiguration.staggeredList(
+
+                              position: index,
+                              duration: const Duration(milliseconds: 475),
+                              child: SlideAnimation(
+                                horizontalOffset: 100.0,
+                                child: FadeInAnimation(
+                                  child: buildSingleTile(
+                                      context, widget.leads[index].expanded,
+                                      labels: labels,
+                                      note: notesMap[leadList[index].id.toString()] ??
+                                          [Notes(note: "No Notes Yet")],
+                                      onLongPress: () {
+                                        buildOptionDialog(widget.leads[index]);
+                                      },
+                                      customer: widget.leads[index],
+                                      lead: widget.leads[index],
+                                      isCustomer: false,
+                                      expPressed: () {
+                                        widget.leads[index].expanded =
+                                            !widget.leads[index].expanded;
+                                        setState(() {});
+                                      },
+                                      deletePressed: () async {
+                                        Provider.of<UserDataProvider>(context,
+                                                listen: false)
+                                            .deleteCustomerLead(widget.leads[index]);
+                                        widget.leads.remove(widget.leads[index]);
+                                      }),
+                                ),
+                              ),
+                            );
+                          }),
+                    )
                   ])
                 : Center(
                     child: InkWell(

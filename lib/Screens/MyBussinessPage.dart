@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_olx/Api/ApiClient.dart';
+import 'package:flutter_olx/CustomWidgets/style.dart';
 import 'package:flutter_olx/Screens/Document/DocumentListPage.dart';
 import 'package:flutter_olx/Screens/PriceProposal/PriceProposalList.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,8 +12,8 @@ import 'package:flutter_olx/CustomWidgets/Button.dart';
 import 'package:flutter_olx/Model/BusinessDetails.dart';
 import 'package:flutter_olx/Provider/UserDataProvider.dart';
 import 'package:flutter_olx/Screens/MyTeam/MyTeamPage.dart';
-import 'package:flutter_olx/Screens/User/BussinessNameScreen.dart';
 import 'package:share/share.dart';
+import 'User/BussinessNameScreen.dart';
 
 class MyBussinespage extends StatefulWidget {
   @override
@@ -159,10 +160,23 @@ class _MyBussinespageState extends State<MyBussinespage> {
                       builder: (context)=>PriceProposalList()
                     ));
               }),
-              buildSingleItem('My Team', '', () {
+
+          Card(
+            child: ListTile(
+              onTap: (){
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => MyTeamPsge()));
-              }),
+              },
+              leading:Icon(Icons.people,color: red,size: 34,) ,
+              title: Text(
+                "My Team",
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(fontWeight: FontWeight.w800, color: Colors.black),
+              ),
+            ),
+          ),
             ],
           ),
         ),

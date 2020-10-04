@@ -66,15 +66,6 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
                           });
                           var status = await insertCustomer(Customer(email:email,address: addressController.text,name: nameController.text,phoneNo: phone ,company: companyController.text));
 
-                          showDialog(context: context,child: AlertDialog(
-                            title: Icon(Icons.error,color: Colors.red,),
-                            content: Text(status),
-                            actions: [
-                              RadientFlatButton('Ok', Colors.green, (){
-                                Navigator.pop(context);
-                              })
-                            ],
-                          ));
                           loading = false;
                           setState(() {
 
@@ -93,6 +84,17 @@ class _AddCustomerPageState extends State<AddCustomerPage> {
 
      var status = await apiClient.createCustomer(customer);
     Provider.of<UserDataProvider>(context,listen: false).getUserData();
+
+     showDialog(context: context,child: AlertDialog(
+       title: Icon(Icons.error,color: Colors.red,),
+       content: Text("Created Successfully"),
+       actions: [
+         RadientFlatButton('Ok', Colors.green, (){
+           Navigator.pop(context);
+           Navigator.pop(context);
+         })
+       ],
+     ));
 
     return status;
   }

@@ -27,6 +27,8 @@ class UserDataProvider extends ChangeNotifier{
 
 List labelList = [];
 List totalCustomers = [];
+
+var isSingleUser = true;
 List teams = [];
 
 List<PriceProposal> priceProposalList ;
@@ -41,6 +43,25 @@ addPriceProposal(PriceProposal priceProposal,image)
 async {
   await apiClient.addPriceProposal(priceProposal, image);
   getPriceProposal();
+}
+
+getApprovedUser()async
+{
+  var pref = await SharedPreferences.getInstance();
+  isSingleUser = pref.getBool("isSingleUser");
+  if(isSingleUser==null)
+    isSingleUser = true;
+  notifyListeners();
+}
+
+approveSingleUser()async
+{
+  var pref = await SharedPreferences.getInstance();
+
+  pref.setBool("isSingleUser", false);
+
+  isSingleUser = false;
+  notifyListeners();
 }
 
 getPriceProposal()async{
@@ -126,6 +147,7 @@ getLabelList()async{
 
   ApiClient apiClient =ApiClient();
   UserDataProvider(){
+    getApprovedUser();
     getUserData();
     getBusinessDetails();
     getPermissions();

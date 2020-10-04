@@ -11,33 +11,33 @@ String customerLabelModelToJson(CustomerLabelModel data) => json.encode(data.toJ
 class CustomerLabelModel {
   CustomerLabelModel({
     this.status,
-    this.cutstomers,
-    this.totalCustomers,
+    this.labelList,
+    this.totalRows,
     this.message,
   });
 
   bool status;
-  List<Cutstomer> cutstomers;
-  int totalCustomers;
+  List<LabelList> labelList;
+  int totalRows;
   String message;
 
   factory CustomerLabelModel.fromJson(Map<String, dynamic> json) => CustomerLabelModel(
     status: json["status"],
-    cutstomers: List<Cutstomer>.from(json["cutstomers"].map((x) => Cutstomer.fromJson(x))),
-    totalCustomers: json["totalCustomers"],
+    labelList: List<LabelList>.from(json["label_list"].map((x) => LabelList.fromJson(x))),
+    totalRows: json["total_rows"],
     message: json["message"],
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
-    "cutstomers": List<dynamic>.from(cutstomers.map((x) => x.toJson())),
-    "totalCustomers": totalCustomers,
+    "label_list": List<dynamic>.from(labelList.map((x) => x.toJson())),
+    "total_rows": totalRows,
     "message": message,
   };
 }
 
-class Cutstomer {
-  Cutstomer({
+class LabelList {
+  LabelList({
     this.id,
     this.cusLeadId,
     this.userId,
@@ -57,7 +57,7 @@ class Cutstomer {
   DateTime dateAdded;
   DateTime date;
 
-  factory Cutstomer.fromJson(Map<String, dynamic> json) => Cutstomer(
+  factory LabelList.fromJson(Map<String, dynamic> json) => LabelList(
     id: json["id"],
     cusLeadId: json["cus_lead_id"],
     userId: json["userId"],

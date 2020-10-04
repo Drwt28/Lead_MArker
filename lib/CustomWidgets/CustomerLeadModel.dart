@@ -40,7 +40,13 @@ Widget buildSingleTile(context, var exp,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Align(
                             alignment: Alignment.topRight,
-                            child: Text(getDate(customer.addedDate.toString()),style: TextStyle(fontSize: 13),)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(Icons.add,color:Colors.black,size: 13,),
+                                Text(getDate(customer.addedDate.toString()),style: TextStyle(fontSize: 13),),
+                              ],
+                            )),
                       ),
                       ListTile(
                         leading: InkWell(

@@ -83,7 +83,7 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                   child: RadientGradientButton(
                       context, 50.0, MediaQuery.of(context).size.width * 0.6,
                           () async {
-                        if (formkey.currentState.validate()) {
+
                           loading = true;
                           setState(() {
 
@@ -109,7 +109,7 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                           setState(() {
 
                           });
-                        }
+
                       }, 'Edit', isLoading: loading),
                 )
               ],

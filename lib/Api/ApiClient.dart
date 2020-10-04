@@ -61,6 +61,7 @@ class ApiClient {
   shareWithTeam(TeamMember teamMember, Customer customer) async {
     var url = "$ENDPOINT/share-lead-customer";
 
+
     var response = await http.post(url,
         body: {
           'share_by[0]': _id,
@@ -167,7 +168,10 @@ class ApiClient {
     try {
       var url = '${ENDPOINT}/user-added-team-list';
       var response =
-          await http.post(url, headers: header, body: {'userId': this._id});
+          await http.post(url, headers: header, body: {'user_id': this._id});
+
+
+      print(_id);
 
       var data = JsonDecoder().convert(response.body);
 
@@ -382,8 +386,8 @@ class ApiClient {
     var response = await http.post(url, headers: header, body: {
       'team_id[0]': team.id,
       'sub_user_id[0]': subUser.id,
-      'name[0]': subUser.username[0],
-      'email[0]': subUser.emailId[0],
+      'name[0]': subUser.username,
+      'email[0]': subUser.emailId,
       'team_name[0]': team.name,
       'role[0]': subUser.role,
       'password[0]': subUser.password ?? subUser.plainPassword,
@@ -503,9 +507,13 @@ class ApiClient {
   Future<CustomerLabelModel> getLabelCustomers(String labelId) async {
     CustomerLabelModel model;
 
-    var url = "$ENDPOINT/get-total-Labels-customer/get-label/$_id/$labelId";
+    var pref = await SharedPreferences.getInstance();
+    this._id = pref.getString('id');
+    _tokken = pref.getString('token');
+    var url = "$ENDPOINT/get-total-Labels-customer/get-label/${_id}/$labelId";
 
     var response = await http.get(url);
+    print(url);
     print(_id);
     print(labelId);
     print("label");

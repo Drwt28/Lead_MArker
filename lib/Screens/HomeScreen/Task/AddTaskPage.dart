@@ -29,11 +29,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   @override
   void initState() {
-    selectedIndex = widget.selected;
-    if(selectedIndex!=-1)
-    setState(() {
 
-    });
+
   }
 
   Widget buildSelectUserWidget(List customers) {

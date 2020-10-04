@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_olx/Screens/HomeScreen/Label/CustomerListPage.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:flutter_olx/Api/ApiClient.dart';
@@ -51,12 +52,17 @@ class _LabelPageState extends State<LabelPage> {
     return Scaffold(
       body: (labels != null)
           ? (labels.length > 0)
-              ? ListView(
+              ? AnimationLimiter(
+
+        child: ListView(
+        reverse: true,
+        shrinkWrap: true,
         scrollDirection: Axis.vertical,
-                  children: List.generate(
-                      labels.length,
-                      (index) => BuildSingleLabelItem(
-                          labels[index] ,calculateCustomers(labels[index]),index)))
+                    children: List.generate(
+                        labels.length,
+                        (index) => BuildSingleLabelItem(
+                            labels[index] ,calculateCustomers(labels[index]),index))),
+              )
               : Center(
                   child: RadientFlatButton('Add label', red, () {
                     _openColorPicker();
@@ -107,18 +113,27 @@ class _LabelPageState extends State<LabelPage> {
     try {
       Color lColor = Color(int.parse(label.color));
     } catch (e) {}
-    return Card(
-      child: ListTile(
-        onTap: () {
+    return AnimationConfiguration.staggeredList(
+      position: index,
+      duration: const Duration(milliseconds: 375),
+      child: SlideAnimation(
+        verticalOffset: 100,
+        child: FadeInAnimation(
+          child: Card(
+            child: ListTile(
+              onTap: () {
 
-          List<Customer> localCustomer = calculateCustomers(label)??[];
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>CustomerListPage(label.id)));
-        },
-        onLongPress: () {
-          showDialog(context: context,child: showOptionDialog(label));
-        },
-       leading: RadientLabel(label.color, label.labelName),
-        trailing: Text(' ${cust.length} Customers '),
+                List<Customer> localCustomer = calculateCustomers(label)??[];
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CustomerListPage(label.id)));
+              },
+              onLongPress: () {
+                showDialog(context: context,child: showOptionDialog(label));
+              },
+             leading: RadientLabel(label.color, label.labelName),
+              trailing: Text(' ${cust.length} Customers '),
+            ),
+          ),
+        ),
       ),
     );
   }

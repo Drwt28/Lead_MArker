@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_olx/Api/ApiClient.dart';
 import 'package:flutter_olx/CustomWidgets/Utils.dart';
+import 'package:flutter_olx/CustomWidgets/style.dart';
+import 'package:flutter_olx/DetailScreen.dart';
 import 'package:flutter_olx/Model/CustomerLabelModel.dart';
 import 'package:flutter_olx/Model/UserData.dart';
 import 'package:flutter_olx/Provider/UserDataProvider.dart';
@@ -42,8 +44,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
         title: Text("Customer List"),
       ),
 
-      body: (customerLabelModel==null)?Center(child: CircularProgressIndicator(),):(customerLabelModel.cutstomers.length>0)?ListView.builder(
-          itemCount: customerLabelModel.totalCustomers,
+      body: (customerLabelModel==null)?Center(child: CircularProgressIndicator(),):(customerLabelModel.labelList.length>0)?ListView.builder(
+          itemCount: customerLabelModel.totalRows,
           itemBuilder: (context,index)=>buildSingleTile(index)):Center(child: Text("No Customers"),),
     );
   }
@@ -52,27 +54,39 @@ class _CustomerListPageState extends State<CustomerListPage> {
   buildSingleTile(index)
   {
 
-    String id  = customerLabelModel.cutstomers[index].cusLeadId;
+    String id  = customerLabelModel.labelList[index].cusLeadId;
 
     Customer customer = customers.firstWhere((element) =>element.id==id);
 
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 3,horizontal: 6),
+      margin: EdgeInsets.symmetric(vertical: 4,horizontal: 6),
       child: ListTile(
-        leading: IconButton(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>detailScreen(customer: customer,isCustomer: true,labels: [],lead: customer,)));
+        },
+        leading: FloatingActionButton(
           onPressed: (){
             launch("+91 ${customer.phoneNo[0].toString()}");
           },
-          icon: Icon(Icons.call,color: Colors.red,),
+          mini: true,
+          elevation: 0,
+          backgroundColor: red,
+          heroTag: index.toString(),
+          child: Icon(Icons.phone,color: Colors.white,),
         ),
-        title:Text(makeTitleString(customer.name),style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black),),
+        title:Text(makeTitleString(customer.name),style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black,fontSize: 17),),
         subtitle: Column(
           children: [
-            Text(customer.email.toString(),style: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.black87),),
+            Align(
+                alignment: Alignment.topLeft,
+                child: Text(customer.email.toString().replaceFirst("]", "").replaceFirst("[", ""),style: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.black87),)),
             SizedBox(height: 3,),
-            Text(customer.company,style: Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.black54),),
+            Align(
+                alignment: Alignment.centerRight,child: Text(customer.company,style: Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.black54),)),
             SizedBox(height: 3,),
-            Text(customer.userType,style: Theme.of(context).textTheme.subtitle2.copyWith(color: Colors.black38),),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Text(customer.userType,style: Theme.of(context).textTheme.subtitle2.copyWith(color: red),)),
           ],
         ),
 
@@ -83,5 +97,8 @@ class _CustomerListPageState extends State<CustomerListPage> {
 
   getData()async {
    customerLabelModel =  await apiClient.getLabelCustomers(widget.labelId);
+   setState(() {
+
+   });
   }
 }

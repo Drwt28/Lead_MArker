@@ -86,6 +86,7 @@ class _AddLeadPageState extends State<AddLeadPage> {
                           actions: [
                             RadientFlatButton('Ok', Colors.green, (){
                               Navigator.pop(context);
+                              Navigator.pop(context);
                             })
                           ],
                         ));

@@ -74,7 +74,10 @@ class _TaskPageState extends State<TaskPage> {
     var tasks = Provider.of<UserDataProvider>(context).userData.userTasks;
     return Scaffold(
       body:!(tasks.length>0&&customers.length>0)?Center(child: CircularProgressIndicator(),):
-      ListView.builder(itemBuilder: (context,index)=>buildSingleTile(tasks[index], customers),itemCount: tasks.length,),
+      ListView.builder(
+        shrinkWrap: true,
+        reverse: true,
+        itemBuilder: (context,index)=>buildSingleTile(tasks[index], customers),itemCount: tasks.length,),
       floatingActionButton: FloatingActionButton(
         backgroundColor: red,
         child: Icon(Icons.add),
